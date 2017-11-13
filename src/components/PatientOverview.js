@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import TableComponent from './TableComponent'
 
-
 export default class PatientOverview extends Component {
 
 	constructor(props) {
