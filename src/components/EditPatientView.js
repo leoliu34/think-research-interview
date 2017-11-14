@@ -6,9 +6,9 @@ export default class EditPatientView extends Component {
 		super(props)
 		this.state = {
 			submitted: false,
-			patient: props.location.state,
+			patient: props.patient,
 			editPatient: props.editPatient,
-			oldPatientMRN: props.location.state.mrn
+			oldPatientMRN: props.patient.mrn
 		}
 		this.submitForm = this.submitForm.bind(this)
 	}
