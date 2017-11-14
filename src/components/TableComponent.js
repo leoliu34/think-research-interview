@@ -48,7 +48,7 @@ export default class TableComponent extends Component {
 					<Dropdown ref={patient.mrn} additionLabel={patient.mrn} text="Actions" onClick={this.performAction} floating button >
 						<Dropdown.Menu>
 							<Dropdown.Item key="show" icon="unhide" text={<Link style={{ color: '#000000' }} to={{ pathname: '/patients/' + patient.mrn }}>Show</Link>} value="show"/>
-							<Dropdown.Item key="edit" icon="edit" text={<Link style={{ color: '#000000' }} to={{ pathname: '/edit/' + patient.mrn }}>Edit</Link>} value="show"/>
+							<Dropdown.Item key="edit" icon="edit" text={<Link style={{ color: '#000000' }} to={{ pathname: '/edit/' + patient.mrn, state: { patient } }}>Edit</Link>} value="show"/>
 							<Dropdown.Item key="delete" icon="delete" text="Destroy" value="delete" onClick={this.onClickDelete} />
 						</Dropdown.Menu>
 					</Dropdown>
@@ -123,7 +123,7 @@ export default class TableComponent extends Component {
 				    </Table.Body>
 				    <Table.Footer>
 				      <Table.Row>
-				        <Table.HeaderCell colSpan='3'>
+				        <Table.HeaderCell colSpan={Object.keys(this.state.header).length}>
 				          <Menu floated='right' pagination>
 				            <Menu.Item as='a' icon>
 				              <Icon name='left chevron' />

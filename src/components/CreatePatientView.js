@@ -37,13 +37,19 @@ export default class CreatePatientView extends Component {
 		this.setState({submitted: true})
 		if (this.state.patient.firstName && this.state.patient.middleName && this.state.patient.mrn) {
 			this.state.addPatient(this.state.patient)
-			this.props.history.push('/')
+			this.props.history.goBack()
 		}
 	}
 	render() {
 		return (
+			<div>
+			<Header as='h2' icon textAlign='center' style={{marginTop:50}}>
+				<Icon name='id badge' circular />
+				<Header.Content>
+				Add New Patient
+				</Header.Content>
+			</Header>
 			<Form style={{margin: 50}}>
-				<Form.Button primary onClick={()=>{this.props.history.push('/')}}>Back to Overview</Form.Button>
 				<Form.Group widths='equal'>
 					<Form.Input 
 						label='First name'
@@ -87,11 +93,12 @@ export default class CreatePatientView extends Component {
 						onChange={this.handleChange}
 					/>
 				</Form.Group>
-				<Form.Group>
+				<Form.Group style={{marginTop: 40}}>
 					<Form.Button primary onClick={this.submitForm}>Submit</Form.Button>
-					<Form.Button secondary onClick={this.submitForm}>Cancel</Form.Button>
+					<Form.Button secondary onClick={()=>{this.props.history.goBack()}}>Cancel</Form.Button>
 				</Form.Group>
 			</Form>
+			</div>
 		)
 	}
 }

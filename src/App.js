@@ -23,7 +23,7 @@ class App extends Component {
         col4: 'Actions'
       },
       patients: {
-        patient1: {
+        patient_1001: {
           mrn: '1001',
           firstName: 'Leo',
           lastName: 'Liu',
@@ -31,7 +31,7 @@ class App extends Component {
           weight: '135',
           height: '178',
         },
-        patient2: {
+        patient_1002: {
           mrn: '1002',
           firstName: 'Lee',
           lastName: 'Liu',
@@ -43,6 +43,7 @@ class App extends Component {
       removePatient: this.removePatient.bind(this),
     }
     this.addPatient = this.addPatient.bind(this)
+    this.editPatient = this.editPatient.bind(this)
   }
 
   removePatient(mrn) {
@@ -67,6 +68,17 @@ class App extends Component {
     })
   }
 
+  editPatient(mrn, newPatient) {
+    if (mrn !== newPatient.mrn) {
+      this.removePatient(mrn)
+    }
+    let newPatients = {...this.state.patients}
+    newPatients['patient_' + mrn] = newPatient
+    this.setState({
+      patients: newPatients
+    })
+  }
+
   render() {
     return (
       <Router>
@@ -74,7 +86,9 @@ class App extends Component {
           <Route exact path="/" render={() => 
             <PatientOverview data={this.state} />
           }/>
-          <Route exact path="/edit/:mrn" component={EditPatientView} />
+          <Route exact path="/edit/:mrn" render={(props) =>
+            <EditPatientView {...props} editPatient={this.editPatient} />
+          }/>
           <Route exact path="/patients/:mrn" component={PatientDetailsView} />
           <Route exact path="/add/patient" render={(props) =>
             <CreatePatientView {...props} addPatient={this.addPatient} />
