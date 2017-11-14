@@ -1,19 +1,14 @@
-import { Icon, Label, Menu, Table, Button, Dropdown, Modal, Header, Form } from 'semantic-ui-react'
+import { Icon, Header, Form } from 'semantic-ui-react'
 import React, { Component } from 'react'
-import {
-  BrowserRouter as Router,
-  Route,
-  Link
-} from 'react-router-dom'
 
 export default class EditPatientView extends Component {
 	constructor(props) {
 		super(props)
-		console.log(props)
 		this.state = {
 			submitted: false,
 			patient: props.location.state,
-			editPatient: props.editPatient
+			editPatient: props.editPatient,
+			oldPatientMRN: props.location.state.mrn
 		}
 		this.submitForm = this.submitForm.bind(this)
 	}
@@ -31,7 +26,7 @@ export default class EditPatientView extends Component {
 	submitForm() {
 		this.setState({submitted: true})
 		if (this.state.patient.firstName && this.state.patient.middleName && this.state.patient.mrn) {
-			this.state.editPatient(this.props.location.state.patient.mrn, this.state.patient)
+			this.state.editPatient(this.state.oldPatientMRN, this.state.patient)
 			this.props.history.goBack()
 		}
 	}
@@ -90,7 +85,7 @@ export default class EditPatientView extends Component {
 							label='MRN' 
 							name='mrn'
 							placeholder='MRN' 
-							error={this.state.patient.mrn == "" && this.state.submitted}
+							error={this.state.patient.mrn === "" && this.state.submitted}
 							onChange={this.handleChange}
 							value={this.state.patient.mrn}
 						/>
