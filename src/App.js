@@ -115,7 +115,7 @@ class App extends Component {
             <PatientOverview {...props} data={this.state} />
           }/>
           <Route exact path="/patient/:mrn/edit" render={(props) =>
-            <EditPatientView {...props} editPatient={this.editPatient} />
+            <EditPatientView {...props} patient={this.getPatient(props.match.params.mrn)} editPatient={this.editPatient} />
           }/>
           <Route exact path="/patient/:mrn" render={(props) =>
             <PatientDetailsView {...props} patient={this.getPatient(props.match.params.mrn)} header={this.state.encountersHeader} remove={this.state.removeEncounter} />
