@@ -1,11 +1,5 @@
-import { Icon, Label, Menu, Table, Button, Dropdown, Modal, Header } from 'semantic-ui-react'
+import { Icon, Menu, Table, Button, Dropdown, Modal, Header } from 'semantic-ui-react'
 import React, { Component } from 'react'
-import {
-  BrowserRouter as Router,
-  Route,
-  Link
-} from 'react-router-dom'
-import EditPatientView from './EditPatientView'
 
 export default class TableComponent extends Component {
 	constructor(props) {
@@ -13,13 +7,14 @@ export default class TableComponent extends Component {
 		this.state = {
 			header: props.header,
 			body: props.body,
-			removePatient: props.removePatient,
+			remove: props.remove,
 			confirmDelete: false,
-			currentPatientMRN: 0
+			currentPatientMRN: 0,
+			currentEncounterKey: {}
 		}
 		this.renderBody = this.renderBody.bind(this)
 		this.performAction = this.performAction.bind(this)
-		this.removePatient = this.removePatient.bind(this)
+		this.remove = this.remove.bind(this)
 		this.modalOpen = this.modalOpen.bind(this)
 		this.modalClose = this.modalClose.bind(this)
 		this.onClickDelete = this.onClickDelete.bind(this)
@@ -33,6 +28,12 @@ export default class TableComponent extends Component {
 	renderBody(key) {
 		const patient = this.state.body[key]
 		let count = Object.keys(this.state.header).length - 1
+		let identifier = patient.mrn
+		let showDetailsLink = '/patient/' + identifier
+		if (this.props.dataType === 'encounter') {
+			identifier = key;
+			showDetailsLink = '/patient/' + this.props.mrn + '/encounter/' + patient.visitNumber
+		}
 		return (
 			<Table.Row key={key}>
 				{ 
@@ -45,10 +46,10 @@ export default class TableComponent extends Component {
 					})
 				}
 				<Table.Cell>
-					<Dropdown ref={patient.mrn} additionLabel={patient.mrn} text="Actions" onClick={this.performAction} floating button >
+					<Dropdown ref={identifier} additionLabel={identifier} text="Actions" onClick={this.performAction} floating button >
 						<Dropdown.Menu>
-							<Dropdown.Item key="show" icon="unhide" text="Show" value="show" onClick={()=> this.props.history.push('/patients/' + patient.mrn, patient)}/>
-							<Dropdown.Item key="edit" icon="edit" text="Edit" value="edit" onClick={()=> this.props.history.push('/edit/' + patient.mrn, patient)}/>
+							<Dropdown.Item key="show" icon="unhide" text="Show" value="show" onClick={()=> this.props.history.push(showDetailsLink)}/>
+							<Dropdown.Item key="edit" icon="edit" text="Edit" value="edit" onClick={()=> this.props.history.push(showDetailsLink + '/edit')}/>
 							<Dropdown.Item key="delete" icon="delete" text="Destroy" value="delete" onClick={this.onClickDelete} />
 						</Dropdown.Menu>
 					</Dropdown>
@@ -62,11 +63,21 @@ export default class TableComponent extends Component {
 	}
 
 	performAction(event, data) {
-		this.setState({ currentPatientMRN: data.additionLabel })
+		if (this.props.dataType === 'encounter') {
+			this.setState({ currentEncounterKey: data.additionLabel })
+			this.setState({ currentPatientMRN: this.props.mrn })
+		}
+		else {
+			this.setState({ currentPatientMRN: data.additionLabel })
+		}
 	}
 
-	removePatient() {
-		this.state.removePatient(this.state.currentPatientMRN)
+	remove() {
+		let removeParameters = [this.state.currentPatientMRN]
+		if (this.props.dataType === 'encounter') {
+			removeParameters.push(this.state.currentEncounterKey)
+		}
+		this.state.remove(...removeParameters)
 		this.modalClose()
 	}
 
@@ -79,6 +90,10 @@ export default class TableComponent extends Component {
 	}
 
 	render() {
+		let createLink = '/add/' + this.props.dataType
+		if (this.props.dataType === 'encounter') {
+			createLink = '/patient/' + this.props.mrn + '/encounter/add'
+		}
 		return (
 				<div>
 				<Modal
@@ -89,13 +104,13 @@ export default class TableComponent extends Component {
 			    >
 			        <Header icon='browser' content='Confirm Delete' />
 			        <Modal.Content>
-			          <h3>Are you sure you want to delete the current patient's entry?</h3>
+			          <h3>Are you sure you want to delete the current {this.props.dataType}'s entry?</h3>
 			        </Modal.Content>
 			        <Modal.Actions>
 			          <Button color='red' onClick={this.modalClose} inverted>
 			            No
 			          </Button>
-			          <Button color='green' onClick={this.removePatient} inverted>
+			          <Button color='green' onClick={this.remove} inverted>
 			            <Icon name='checkmark' /> Yes
 			          </Button>
 			        </Modal.Actions>
@@ -104,7 +119,7 @@ export default class TableComponent extends Component {
 				    <Table.Header>
 				      <Table.Row>
 				        <Table.HeaderCell colSpan={Object.keys(this.state.header).length-1}>{this.props.title}</Table.HeaderCell>
-				        <Table.HeaderCell><Button primary onClick={()=>this.props.history.push('/add/patient')}>Add User</Button></Table.HeaderCell>
+				        <Table.HeaderCell><Button primary onClick={()=>this.props.history.push(createLink)}>Add {this.props.dataType}</Button></Table.HeaderCell>
 				      </Table.Row>
 				      <Table.Row>
 				      {
