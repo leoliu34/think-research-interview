@@ -1,9 +1,5 @@
-import { Icon, Label, Menu, Table, Button, Dropdown, Modal, Header } from 'semantic-ui-react'
+import { Icon, Form, Header } from 'semantic-ui-react'
 import React, { Component } from 'react'
-import {
-	Form,
-	Message
-} from 'semantic-ui-react'
 
 export default class CreatePatientView extends Component {
 	constructor(props) {
@@ -11,12 +7,13 @@ export default class CreatePatientView extends Component {
 		this.state = {
 			submitted: false,
 			patient: {
+				mrn: '',
 				firstName: '',
 				lastName: '',
 				middleName: '',
 				weight: '',
 				height: '',
-				mrn: ''
+				encounters: {}
 			},
 			addPatient: props.addPatient
 		}
@@ -89,7 +86,7 @@ export default class CreatePatientView extends Component {
 						label='MRN' 
 						name='mrn'
 						placeholder='MRN' 
-						error={this.state.patient.mrn == "" && this.state.submitted}
+						error={this.state.patient.mrn === "" && this.state.submitted}
 						onChange={this.handleChange}
 					/>
 				</Form.Group>
