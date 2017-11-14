@@ -11,7 +11,7 @@ export default class PatientOverview extends Component {
 	render() {
 		return (
 			<div>
-				<TableComponent {...this.props} title="Patient List" header={this.state.header} body={this.state.patients} removePatient={this.state.removePatient}/>
+				<TableComponent {...this.props} title="Patient List" header={this.state.header} body={this.state.patients} dataType="patient" remove={this.state.removePatient}/>
 			</div>
 		)
 	}
