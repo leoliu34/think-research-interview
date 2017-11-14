@@ -83,8 +83,8 @@ class App extends Component {
     return (
       <Router>
         <Switch>
-          <Route exact path="/" render={() => 
-            <PatientOverview data={this.state} />
+          <Route exact path="/" render={(props) => 
+            <PatientOverview {...props} data={this.state} />
           }/>
           <Route exact path="/edit/:mrn" render={(props) =>
             <EditPatientView {...props} editPatient={this.editPatient} />

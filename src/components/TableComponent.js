@@ -47,8 +47,8 @@ export default class TableComponent extends Component {
 				<Table.Cell>
 					<Dropdown ref={patient.mrn} additionLabel={patient.mrn} text="Actions" onClick={this.performAction} floating button >
 						<Dropdown.Menu>
-							<Dropdown.Item key="show" icon="unhide" text={<Link style={{ color: '#000000' }} to={{ pathname: '/patients/' + patient.mrn }}>Show</Link>} value="show"/>
-							<Dropdown.Item key="edit" icon="edit" text={<Link style={{ color: '#000000' }} to={{ pathname: '/edit/' + patient.mrn, state: { patient } }}>Edit</Link>} value="show"/>
+							<Dropdown.Item key="show" icon="unhide" text="Show" value="show" onClick={()=> this.props.history.push('/patients/' + patient.mrn, patient)}/>
+							<Dropdown.Item key="edit" icon="edit" text="Edit" value="edit" onClick={()=> this.props.history.push('/edit/' + patient.mrn, patient)}/>
 							<Dropdown.Item key="delete" icon="delete" text="Destroy" value="delete" onClick={this.onClickDelete} />
 						</Dropdown.Menu>
 					</Dropdown>
@@ -104,7 +104,7 @@ export default class TableComponent extends Component {
 				    <Table.Header>
 				      <Table.Row>
 				        <Table.HeaderCell colSpan={Object.keys(this.state.header).length-1}>{this.props.title}</Table.HeaderCell>
-				        <Table.HeaderCell><Button primary><Link style={{color: '#FFF'}}to="/add/patient">Add User</Link></Button></Table.HeaderCell>
+				        <Table.HeaderCell><Button primary onClick={()=>this.props.history.push('/add/patient')}>Add User</Button></Table.HeaderCell>
 				      </Table.Row>
 				      <Table.Row>
 				      {

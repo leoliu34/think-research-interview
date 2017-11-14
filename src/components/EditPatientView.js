@@ -9,9 +9,10 @@ import {
 export default class EditPatientView extends Component {
 	constructor(props) {
 		super(props)
+		console.log(props)
 		this.state = {
 			submitted: false,
-			patient: props.location.state.patient,
+			patient: props.location.state,
 			editPatient: props.editPatient
 		}
 		this.submitForm = this.submitForm.bind(this)
