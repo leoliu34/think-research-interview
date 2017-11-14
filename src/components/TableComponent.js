@@ -47,8 +47,8 @@ export default class TableComponent extends Component {
 				<Table.Cell>
 					<Dropdown ref={patient.mrn} additionLabel={patient.mrn} text="Actions" onClick={this.performAction} floating button >
 						<Dropdown.Menu>
-							<Dropdown.Item key="show" icon="unhide" text={<Link style={{ color: '#000000' }} to={{ pathname: '/patients/' + this.state.currentPatientMRN }}>Show</Link>} value="show"/>
-							<Dropdown.Item key="edit" icon="edit" text={<Link style={{ color: '#000000' }} to={{ pathname: '/edit/' + this.state.currentPatientMRN }}>Edit</Link>} value="show"/>
+							<Dropdown.Item key="show" icon="unhide" text={<Link style={{ color: '#000000' }} to={{ pathname: '/patients/' + patient.mrn }}>Show</Link>} value="show"/>
+							<Dropdown.Item key="edit" icon="edit" text={<Link style={{ color: '#000000' }} to={{ pathname: '/edit/' + patient.mrn }}>Edit</Link>} value="show"/>
 							<Dropdown.Item key="delete" icon="delete" text="Destroy" value="delete" onClick={this.onClickDelete} />
 						</Dropdown.Menu>
 					</Dropdown>
@@ -62,8 +62,7 @@ export default class TableComponent extends Component {
 	}
 
 	performAction(event, data) {
-		let patientMRN = parseInt(data.additionLabel)
-		this.setState({ currentPatientMRN: patientMRN })
+		this.setState({ currentPatientMRN: data.additionLabel })
 	}
 
 	removePatient() {
