@@ -1,6 +1,8 @@
 import { Icon, Menu, Table, Button, Dropdown, Modal, Header } from 'semantic-ui-react'
 import React, { Component } from 'react'
 
+const rowsPerPage = 7;
+
 export default class TableComponent extends Component {
 	constructor(props) {
 		super(props)
@@ -10,14 +12,20 @@ export default class TableComponent extends Component {
 			remove: props.remove,
 			confirmDelete: false,
 			currentPatientMRN: 0,
-			currentEncounterKey: {}
+			currentEncounterKey: {},
+			startPosition: 0,
+			endPosition: rowsPerPage,
+			activePage: 1,
+			rowCount: Object.keys(props.body).length
 		}
 		this.renderBody = this.renderBody.bind(this)
+		this.renderMenuItems = this.renderMenuItems.bind(this)
 		this.performAction = this.performAction.bind(this)
 		this.remove = this.remove.bind(this)
 		this.modalOpen = this.modalOpen.bind(this)
 		this.modalClose = this.modalClose.bind(this)
 		this.onClickDelete = this.onClickDelete.bind(this)
+		this.updatePagination = this.updatePagination.bind(this)
 	}
 
 	renderHeader(key) {
@@ -25,7 +33,7 @@ export default class TableComponent extends Component {
 		return <Table.HeaderCell key={key}>{header}</Table.HeaderCell>
 	}
 
-	renderBody(key) {
+	renderBody(key, rowPerPage) {
 		const patient = this.state.body[key]
 		let count = Object.keys(this.state.header).length - 1
 		let identifier = patient.mrn
@@ -56,6 +64,25 @@ export default class TableComponent extends Component {
 				</Table.Cell>
 			</Table.Row>
 		)
+	}
+
+	updatePagination(event, data) {
+
+		let startPosition = (parseInt(data.name) - 1) * rowsPerPage
+		this.setState({
+			startPosition: startPosition,
+			endPosition: startPosition + rowsPerPage,
+			activePage: startPosition / rowsPerPage + 1
+		})
+
+	}
+
+	renderMenuItems() {
+		let items = []
+    	for (var i = 0; i < Math.ceil(this.state.rowCount / rowsPerPage); i++) {
+    		items.push(<Menu.Item key={i} active={(this.state.activePage - 1) === i} name={''+(i+1)} onClick={this.updatePagination} />)
+    	}
+    	return items
 	}
 
 	onClickDelete(event, data) {
@@ -133,20 +160,18 @@ export default class TableComponent extends Component {
 				    {
 				    	Object
 				    	.keys(this.state.body)
+				    	.slice(this.state.startPosition, this.state.endPosition)
 				    	.map(key => this.renderBody(key))
 				    }
 				    </Table.Body>
 				    <Table.Footer>
 				      <Table.Row>
 				        <Table.HeaderCell colSpan={Object.keys(this.state.header).length}>
-				          <Menu floated='right' pagination>
+				          <Menu floated='right' pagination >
 				            <Menu.Item as='a' icon>
 				              <Icon name='left chevron' />
 				            </Menu.Item>
-				            <Menu.Item as='a'>1</Menu.Item>
-				            <Menu.Item as='a'>2</Menu.Item>
-				            <Menu.Item as='a'>3</Menu.Item>
-				            <Menu.Item as='a'>4</Menu.Item>
+				            {this.renderMenuItems()}
 				            <Menu.Item as='a' icon>
 				              <Icon name='right chevron' />
 				            </Menu.Item>
