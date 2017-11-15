@@ -68,7 +68,7 @@ export default class TableComponent extends Component {
 
 	updatePagination(event, data) {
 
-		let startPosition = (parseInt(data.name) - 1) * rowsPerPage
+		let startPosition = (parseInt(data.name, 10) - 1) * rowsPerPage
 		this.setState({
 			startPosition: startPosition,
 			endPosition: startPosition + rowsPerPage,
@@ -114,6 +114,13 @@ export default class TableComponent extends Component {
 
 	modalClose() {
 		this.setState({ confirmDelete: false })
+	}
+
+	componentWillReceiveProps(nextProps) {
+		this.setState({
+			body: nextProps.body,
+			rowCount: Object.keys(nextProps.body).length
+		})
 	}
 
 	render() {

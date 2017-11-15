@@ -27,7 +27,9 @@ export default class EditEncounterView extends Component {
 	submitForm() {
 		this.setState({submitted: true})
 		this.state.editEncounter(this.props.match.params.mrn, this.state.oldVisitNumber, this.state.encounter)
-		this.props.history.goBack()
+		let encounterStringIndex = this.props.match.url.indexOf('/encounter')
+
+		this.props.history.push(this.props.match.url.substring(0, encounterStringIndex))
 	}
 
 	render() {

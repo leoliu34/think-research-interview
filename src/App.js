@@ -30,7 +30,7 @@ class App extends Component {
         col3: 'Discharged At',
         col4: 'Actions'
       },
-      patients: exportPatient(),
+      patients: {},
       removePatient: this.removePatient.bind(this),
       removeEncounter: this.removeEncounter.bind(this)
     }
@@ -40,6 +40,11 @@ class App extends Component {
     this.editPatient = this.editPatient.bind(this)
     this.getPatient = this.getPatient.bind(this)
     this.getEncounter = this.getEncounter.bind(this)
+    this.importPatients = this.importPatients.bind(this)
+  }
+
+  importPatients() {
+    this.setState({patients: exportPatient()})
   }
 
   removePatient(mrn) {
@@ -112,7 +117,7 @@ class App extends Component {
       <Router>
         <Switch>
           <Route exact path="/" render={(props) => 
-            <PatientOverview {...props} data={this.state} />
+            <PatientOverview {...props} data={this.state} importData={this.importPatients} />
           }/>
           <Route exact path="/patient/:mrn/edit" render={(props) =>
             <EditPatientView {...props} patient={this.getPatient(props.match.params.mrn)} editPatient={this.editPatient} />
@@ -124,7 +129,7 @@ class App extends Component {
             <CreateEncounterView {...props} addEncounter={this.addEncounter} />
           }/>
           <Route exact path="/patient/:mrn/encounter/:visitNumber" render={(props) =>
-            <EncounterDetailsView {...props} encounter={this.getEncounter(props.match.params.mrn, props.match.params.visitNumber)} />
+            <EncounterDetailsView {...props} encounter={this.getEncounter(props.match.params.mrn, props.match.params.visitNumber)} remove={this.state.removeEncounter}/>
           }/>
           <Route exact path="/patient/:mrn/encounter/:visitNumber/edit" render={(props) => 
             <EditEncounterView {...props} encounter={this.getEncounter(props.match.params.mrn, props.match.params.visitNumber)} editEncounter={this.editEncounter} />
